@@ -81,18 +81,24 @@ class CustomerController extends Controller
 
     public function addLatLng ()
     {        
-        $customers = Customer::all();        
-        foreach ($customers as $value) {                        
-            $cityArray = explode (" ", $value->city); 
-            $changedCityByPlus = join("+",$cityArray);                    
-            $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json?address='.$changedCityByPlus.'&key=AIzaSyAbMNQzamdFW65UkiKzL_Nt8S_1iIjdC5c');           
-            if ($response['status'] == "OK") {                
-                $lat = $response->json()['results'][0]['geometry']['location']['lat'];
-                $lng = $response->json()['results'][0]['geometry']['location']['lng'];
-                Customer::where('id', $value->id)
-                ->update(['longitude' => $lng, 'latitude' => $lat]);
-            }
-        }             
+        $response = null;
+        try {
+            $customers = Customer::all();        
+            foreach ($customers as $value) {                        
+                $cityArray = explode (" ", $value->city); 
+                $changedCityByPlus = join("+",$cityArray);                    
+                $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json?address='.$changedCityByPlus.'&key=AIzaSyAbMNQzamdFW65UkiKzL_Nt8S_1iIjdC5c');           
+                if ($response['status'] == "OK") {                
+                    $lat = $response->json()['results'][0]['geometry']['location']['lat'];
+                    $lng = $response->json()['results'][0]['geometry']['location']['lng'];
+                    Customer::where('id', $value->id)
+                    ->update(['longitude' => $lng, 'latitude' => $lat]);
+                }
+            }    
+            return "Success!";       
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }     
     }
     /**
      * Show the form for editing the specified resource.
