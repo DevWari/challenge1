@@ -17,17 +17,3 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get(
-    '/customer',
-    [CustomerController::class, 'showAllCustomer']
-);
-
-Route::get(
-    '/getCustomer/{id}',
-    [CustomerController::class, 'getCustomerById']
-);
-
-Route::get(
-    '/addLatLng',
-    [CustomerController::class, 'addLatLng']
-);

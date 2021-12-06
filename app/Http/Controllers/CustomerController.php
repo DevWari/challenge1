@@ -51,24 +51,37 @@ class CustomerController extends Controller
         //
     }
 
-
-    public function showAllCustomer ()
-    {
-        $customers = Customer::all();
-        return $customers;
+    public function getAllCustomers ()
+    {        
+        $response = null;
+        try {
+            $customers = Customer::all();   
+            $response['data'] = $customers;
+            $response['success'] = true;            
+        } catch (\Exception $e) {
+            $response ['success'] = false;
+            $response ['message'] = $e->getMessage();
+        }        
+        return $response;
     }
 
     public function getCustomerById ($id)     
-    {        
-        $customer = Customer::where('id', $id)->first();
-        return $customer;
+    {                
+        $response = null;
+        try {
+            $customer = Customer::where('id', $id)->first();
+            $response['data'] = $customer;
+            $response['success'] = true;            
+        } catch (\Exception $e) {
+            $response ['success'] = false;
+            $response ['message'] = $e->getMessage();
+        }                        
+        return $response;
     }
 
     public function addLatLng ()
-    {      
-        
-        $customers = Customer::all();
-        // return $customers;
+    {        
+        $customers = Customer::all();        
         foreach ($customers as $value) {                        
             $cityArray = explode (" ", $value->city); 
             $changedCityByPlus = join("+",$cityArray);                    
@@ -78,8 +91,6 @@ class CustomerController extends Controller
                 $lng = $response->json()['results'][0]['geometry']['location']['lng'];
                 Customer::where('id', $value->id)
                 ->update(['longitude' => $lng, 'latitude' => $lat]);
-            } else {
-                echo "NO";
             }
         }             
     }

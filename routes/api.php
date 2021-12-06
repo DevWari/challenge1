@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +20,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get(
-    '/customer',
-    [CustomerController::class, 'showAllCustomer']
+    '/customers',
+    [CustomerController::class, 'getAllCustomers']
+);
+
+Route::get(
+    '/customers/{id}',
+    [CustomerController::class, 'getCustomerById']
+);
+
+Route::get(
+    '/add-geoloaction',
+    [CustomerController::class, 'addLatLng']
 );
